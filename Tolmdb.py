@@ -3,6 +3,7 @@ import os
 import lmdb # install lmdb by "pip install lmdb"
 import cv2
 import numpy as np
+import tqdm
 #from genLineText import GenTextImage
  
 def checkImageIsValid(imageBin):
@@ -37,9 +38,9 @@ def createDataset(outputPath, imagePathList, labelList, lexiconList=None, checkV
     #print (len(imagePathList) , len(labelList))
     assert(len(imagePathList) == len(labelList))
     nSamples = len(imagePathList)
-    print '...................'
-    # map_size=1099511627776 定义最大空间是1TB
-    env = lmdb.open(outputPath, map_size=1099511627776)
+    print( '...................')
+    # map_size=1073741824 定义最大空间是1GB
+    env = lmdb.open(outputPath, map_size=4073741824)
     
     cache = {}
     cnt = 1
@@ -49,13 +50,14 @@ def createDataset(outputPath, imagePathList, labelList, lexiconList=None, checkV
         if not os.path.exists(imagePath):
             print('%s does not exist' % imagePath)
             continue
-        with open(imagePath, 'r') as f:
+        with open(imagePath, mode='r') as f:
             imageBin = f.read()
+
         if checkValid:
             if not checkImageIsValid(imageBin):
                 print('%s is not a valid image' % imagePath)
                 continue
- 
+
  
         ########## .mdb数据库文件保存了两种数据，一种是图片数据，一种是标签数据，它们各有其key
         imageKey = 'image-%09d' % cnt
@@ -84,30 +86,31 @@ def read_text(path):
     text = text.strip()
     
     return text
- 
- 
+
 import glob
 if __name__ == '__main__':
     
     #lmdb 输出目录
-    outputPath = '/data_1/crnn/IIIT5K/my/lmdb3'
+    outputPath = '/home/cjy/Desktop/CRNN_data/data/date_testdata_lmdb'
  
     # 训练图片路径，标签是txt格式，名字跟图片名字要一致，如123.jpg对应标签需要是123.txt
-    path = '/data_1/crnn/IIIT5K/my/train/*.png'
- 
+    path = '/home/cjy/Desktop/CRNN_data/data/date_testdata/*.jpg'
     imagePathList = glob.glob(path)
-    print '------------',len(imagePathList),'------------'
+    print ('------------',len(imagePathList),'------------')
     imgLabelLists = []
+    print(len(imagePathList))
     for p in imagePathList:
         try:
-           imgLabelLists.append((p,read_text(p.replace('.png','.txt'))))
+           imgLabelLists.append((p,read_text(p.replace('.jpg','.txt'))))
+           #print(p)
         except:
             continue
-            
+    print("finish append")
     #imgLabelList = [ (p,read_text(p.replace('.jpg','.txt'))) for p in imagePathList]
     ##sort by lebelList
     imgLabelList = sorted(imgLabelLists,key = lambda x:len(x[1]))
+    print(len(imgLabelList))
     imgPaths = [ p[0] for p in imgLabelList]
     txtLists = [ p[1] for p in imgLabelList]
-    
+    print("start create")
     createDataset(outputPath, imgPaths, txtLists, lexiconList=None, checkValid=True)

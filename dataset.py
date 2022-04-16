@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # encoding: utf-8
-
+# -*- coding:utf-8 -*- #
 import random
 import torch
 from torch.utils.data import Dataset
@@ -63,7 +63,7 @@ class lmdbDataset(Dataset):
         index += 1
         with self.env.begin(write=False) as txn:
             img_key = 'image-%09d' % index
-            imgbuf = txn.get(img_key.encode())
+            imgbuf = txn.get(img_key.encode("UTF-8"))
 
             buf = six.BytesIO()
             buf.write(imgbuf)
@@ -79,7 +79,7 @@ class lmdbDataset(Dataset):
 
             label_key = 'label-%09d' % index
             label_byte = txn.get(label_key.encode())  ################33
-            label = label_byte.decode()
+            label = label_byte.decode("gbk")#gbk
 
             if self.target_transform is not None:
                 label = self.target_transform(label)
