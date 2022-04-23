@@ -1,36 +1,27 @@
-Convolutional Recurrent Neural Network
-======================================
+# CRNN
 
-详细教程见博客(https://www.cnblogs.com/yanghailin/p/14519525.html)
+## Reference
+1. 源码：https://github.com/meijieru/crnn.pytorch
+2. bug修改版：https://github.com/wuzuowuyou/crnn_pytorch(最终使用)
+3. csdn:https://blog.csdn.net/yang332233/article/details/114681470  
+4. lmdb训练集制作:https://blog.csdn.net/weixin_30727835/article/details/95614996
+------ 
+## Environment
+    ubuntu18.04+cuda10+pytorch1.2+pycharm+anaconda
+	lmdb==0.97
+	numpy==1.17.2
+	Pillow==6.1.0
+	six==1.12.0
+	torch==1.2.0
+	torchvision==0.4.0
+------ 
+## Demo
+   
 
-This software implements the Convolutional Recurrent Neural Network (CRNN) in pytorch.
-Origin software could be found in [ meijieru/
-crnn.pytorch ](https://github.com/meijieru/crnn.pytorch)
-
-Run demo
---------
-A demo program can be found in ``demo.py``. Before running the demo, download a pretrained model
-from [Baidu Netdisk](https://pan.baidu.com/s/1pLbeCND) or [Dropbox](https://www.dropbox.com/s/dboqjk20qjkpta3/crnn.pth?dl=0). 
-This pretrained model is converted from auther offered one by ``tool``.
-Put the downloaded model file ``crnn.pth`` into directory ``data/``. Then launch the demo by:
-
-    python demo.py
-
-The demo reads an example image and recognizes its text content.
-
-Example image:
-![Example Image](./data/demo.png)
-
-Expected output:
-    loading pretrained model from ./data/crnn.pth
-    a-----v--a-i-l-a-bb-l-ee-- => available
-
-Dependence
-----------
-* [warp_ctc_pytorch](https://github.com/SeanNaren/warp-ctc/tree/pytorch_bindings/pytorch_binding)
-* lmdb
-
-Train a new model
------------------
-1. Construct dataset following [origin guide](https://github.com/bgshih/crnn#train-a-new-model). If you want to train with variable length images (keep the origin ratio for example), please modify the `tool/create_dataset.py` and sort the image according to the text length.
-2. Execute ``python train.py --adadelta --trainRoot {train_path} --valRoot {val_path} --cuda``. Explore ``train.py`` for details.
+ 
+   
+4. 本系统分为单张识别和批量识别模式，点击开始识别将调用。点击单张识别，通过可视化路径选择所要辨识的支票图片，再点击开始识别，系统会对支票自动进行辨识，并将文本结果输出到    左边显示框，并且在支票图像展示区域也会框选识别目标。使用者可以点击保存信息，将这次的识别结果先保存于后台。当遇到大量支票需要辨识时，可以选择批量识别模式，选择所要辨识    的支票文件夹，所有支票文件名会先显示在信息交互窗口。再点击开始识别，系统开始自动辨识，每张支票大概只消耗 2-3 秒的时间。等待辨识结束，可以点击保存信息将结果存于后台。  
+   
+   ![alt 文字](https://github.com/Boomm-shakalaka/CheckRecognition_TW/blob/master/demo_pic/recog.png)
+   
+5. 当所有辨识结果已经保存，可以点击上方导出按钮，系统会自动将已保存的支票信息生成一份 Excel 档案，以提供给用户进行后期使用。
