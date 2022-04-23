@@ -16,7 +16,9 @@
 	torchvision==0.4.0
 ------ 
 ## Demo
-   
+1. 建立训练集和验证集，例如1.jpg对应1.txt。.txt中是图片中的文本。
+2. 运行Tolmdb.py，生成LMDB数据
+3. 运行
 
  
    
