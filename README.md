@@ -7,6 +7,7 @@
 4. lmdb训练集制作:https://blog.csdn.net/weixin_30727835/article/details/95614996
 ------ 
 ## Environment
+ 	```
     ubuntu18.04+cuda10+pytorch1.2+pycharm+anaconda
 	lmdb==0.97
 	numpy==1.17.2
@@ -14,16 +15,45 @@
 	six==1.12.0
 	torch==1.2.0
 	torchvision==0.4.0
+ 	```
 ------ 
 ## Demo
 1. 建立训练集和验证集，例如1.jpg对应1.txt。.txt中是图片中的文本。
-2. 运行Tolmdb.py，生成LMDB数据
-3. 运行
+2. 运行 lmdb.py，生成LMDB数据。
+3. 修改 train.py中的alphabet和参数。运行 train.py，开始训练。    
+------ 
+## Debug
+1. run lmdb.py     
+	Error: 'utf-8' codec can't decode byte 0xff in position 0: inva    
+	解决：在python2才能运行
 
- 
-   
-4. 本系统分为单张识别和批量识别模式，点击开始识别将调用。点击单张识别，通过可视化路径选择所要辨识的支票图片，再点击开始识别，系统会对支票自动进行辨识，并将文本结果输出到    左边显示框，并且在支票图像展示区域也会框选识别目标。使用者可以点击保存信息，将这次的识别结果先保存于后台。当遇到大量支票需要辨识时，可以选择批量识别模式，选择所要辨识    的支票文件夹，所有支票文件名会先显示在信息交互窗口。再点击开始识别，系统开始自动辨识，每张支票大概只消耗 2-3 秒的时间。等待辨识结束，可以点击保存信息将结果存于后台。  
-   
-   ![alt 文字](https://github.com/Boomm-shakalaka/CheckRecognition_TW/blob/master/demo_pic/recog.png)
-   
-5. 当所有辨识结果已经保存，可以点击上方导出按钮，系统会自动将已保存的支票信息生成一份 Excel 档案，以提供给用户进行后期使用。
+2. warp-ctc编译：  
+ 	```
+	git clone https://github.com/SeanNaren/warp-ctc.git
+	cd warp-ctc    
+	mkdir build     
+	cd build    
+	cmake ..  
+	make
+	cd ../pytorch_binding
+	python setup.py install
+	 ```
+  	Error: nvcc fatal : Value 'c++14' is not defined for option 'std      
+   	解决： cuda版本兼容问题，安装cuda10,cudnn7,torch1.2,python3.6```conda install pytorch==1.2.0,torchvision==0.4.0 cudatoolkit=10.0 -c pytorch ```  
+	
+	Error: fatal error: cuda_runtime_api.h: No such file or directory  
+	解决：在warp-ctc/pytorch_binding/setup.py 修改  ```extra_compile_args = ['-std=c++14', '-fPIC']为extra_compile_args = ['-std=c++14', '-fPIC','-I/usr/local/cuda/include'] ```  
+	
+3. train.py：  
+	Error: the nvidia driver on your system is too old (found version 9000)  
+	解决：显卡驱动版本过低，或者cuda,pytorch版本没有对应。  
+	1. 安装对应版本。  
+	2. 重新安装新版显卡驱动（https://zhuanlan.zhihu.com/p/59618999）  
+
+4. 中文汉字训练：  
+	Error: TypeError: function takes exactly 5 arguments (1 given)  
+	解决： 无人解答。parser.add_argument('--workers', type=int, help='number of data loading workers',default=0)#线程数导入数据，default为0    
+	
+	Error: UnicodeDecodeError: 'utf-8' codec can't decode byte 0xd9 in position 0: invalid continuation byte  
+	解决： 无人解答，中文字符解码问题（猜测）
+        解决：dataset.py-> label = label_byte.decode('gbk')。gb2312简体汉字编码规范，big5繁体汉字编码规范,gbk大字符集，兼容所有亚洲字符。但针对繁体字这边只能用gbk不知道为什么
