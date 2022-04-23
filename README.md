@@ -1,5 +1,5 @@
 # CRNN
-
+CRNN是一种卷积循环神经网络结构，用于解决基于图像的序列识别问题，特别是场景文字识别问题。
 ## Reference
 1. 源码：https://github.com/meijieru/crnn.pytorch
 2. bug修改版：https://github.com/wuzuowuyou/crnn_pytorch(最终使用)
