@@ -7,7 +7,6 @@ CRNN是一种卷积循环神经网络结构，用于解决基于图像的序列�
 4. lmdb训练集制作:https://blog.csdn.net/weixin_30727835/article/details/95614996
 ------ 
 ## Environment
- 	```
     ubuntu18.04+cuda10+pytorch1.2+pycharm+anaconda
 	lmdb==0.97
 	numpy==1.17.2
@@ -15,7 +14,6 @@ CRNN是一种卷积循环神经网络结构，用于解决基于图像的序列�
 	six==1.12.0
 	torch==1.2.0
 	torchvision==0.4.0
- 	```
 ------ 
 ## Demo
 1. 建立训练集和验证集，例如1.jpg对应1.txt。.txt中是图片中的文本。
